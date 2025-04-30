@@ -5,28 +5,36 @@ reload("lenn.plugins.pomo")
 reload("lenn.utils.templates")
 reload("lenn.customTheme.lualine")
 reload("lenn.core.which-keys")
+reload("lenn.react")
+-- reload("lenn.core.snippets")
 
 vim.opt.termguicolors = true
 lvim.colorscheme = "catppuccin"
 lvim.transparent_window = true
+lvim.format_on_save = true
 vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
 
 vim.g.lvim_dap_enable = true
+
 
 vim.opt.sidescrolloff = 8
 vim.opt.guifont = "JetBrainsMono Nerd Font:h12"
 vim.opt.clipboard = "unnamedplus"
 vim.opt.smartcase = true
-vim.opt.smartindent = false
+vim.opt.smartindent = true
 vim.opt.termguicolors = true
 vim.opt.numberwidth = 2
+lvim.builtin.gitsigns.active = true
+
 
 -- vim.opt.spell = true
 -- vim.opt.spellang = "en_us, es"
 -- vim.opt.scrolloff = 2
 
 
-lvim.builtin.indentlines.active = true
+lvim.builtin.indentlines.active = false
+
+
 
 -- NOTE: for windows only
 -- Enable powershell as your default shell
@@ -68,9 +76,29 @@ vim.g.clipboard = {
 
 --NOTE: CUSTOM PLUGINS -----------------------------------------------------------------
 lvim.plugins = {
+  { "nvimtools/none-ls.nvim" },
+
   -- -- dap
   { "mfussenegger/nvim-jdtls" },
 
+  -- mini indentline
+  {
+    "echasnovski/mini.indentscope",
+    version = false,
+    config = function()
+      require("mini.indentscope").setup {
+        draw = {
+          delay = 100,
+          animation = require("mini.indentscope").gen_animation.none()
+        },
+        symbol = "▏", -- Personalizable
+        options = {
+          border = "none"
+        }
+      }
+      vim.cmd [[highlight MiniIndentscopeSymbol guifg=#292c3c]]
+    end
+  },
   -- image view
   {
     "folke/snacks.nvim",
@@ -147,6 +175,7 @@ lvim.plugins = {
   {
     "lewis6991/gitsigns.nvim"
   },
+
   {
     "NeogitOrg/neogit",
     dependencies = {
@@ -163,6 +192,7 @@ lvim.plugins = {
     version = "*",
     config = true
   },
+  { "tpope/vim-fugitive" },
 
   -- neorg
   {
@@ -217,36 +247,66 @@ lvim.plugins = {
       require("refactoring").setup()
     end,
   },
-
-  -- copilot
+  -- Copilot Core Configuration
   {
     "zbirenbaum/copilot.lua",
-    cmd = "Copilot",
     event = "InsertEnter",
+    build = ":Copilot auth",
     config = function()
       require("copilot").setup({
-        suggestion = { enabled = true },
-        panel = { enabled = true },
+        suggestion = {
+          enabled = true,
+          auto_trigger = true,
+          debounce = 75,
+          keymap = {
+            accept = "<C-l>",  -- Aceptar sugerencia
+            next = "<M-]>",    -- Siguiente sugerencia
+            prev = "<M-[>",    -- Sugerencia anterior
+            dismiss = "<C-]>", -- Descartar sugerencia
+          },
+        },
+        panel = {
+          enabled = true,
+          auto_refresh = true,
+          keymap = {
+            open = "<C-CR>",
+          },
+        },
+        filetypes = {
+          markdown = true,
+          help = true,
+          ["*"] = true,
+        },
       })
     end,
   },
-  {
-    "zbirenbaum/copilot-cmp",
-    config = function()
-      require("copilot_cmp").setup()
-    end
-  },
+
+  --ccpmm
+  -- {
+  --   "zbirenbaum/copilot-cmp",
+  --   dependencies = { "zbirenbaum/copilot.lua" }, -- Dependencia de copilot.lua
+  --   config = function()
+  --     require("copilot_cmp").setup()             -- Configura la integración con nvim-cmp
+  --   end,
+  -- },
+
+  -- Copilot Chat Configuration
   {
     "CopilotC-Nvim/CopilotChat.nvim",
+    cmd = { "CopilotChat", "CopilotChatOpen" }, -- Comandos para abrir el chat de Copilot
+    build = "make tiktoken",                    -- Comando de construcción
     dependencies = {
-      { "github/copilot.vim" },
-      { "nvim-lua/plenary.nvim", branch = "master" },
+      { "nvim-lua/plenary.nvim" },              -- Dependencia para funciones Lua comunes
+      { "github/copilot.vim" },                 -- Dependencia de Copilot para Vim
     },
-    build = "make tiktoken",
     opts = {
+      debug = false,
+      window = {
+        layout = "float",   -- Layout flotante para el chat
+        border = "rounded", -- Borde redondeado para la ventana
+      },
     },
   },
-
   -- nextjs
   {
     "dreamsofcode-io/nvim-nextjs",
@@ -264,7 +324,7 @@ lvim.plugins = {
         },
         per_filetype = {
           ["html"] = {
-            enable_close = false
+            enable_close = true,
           }
         }
       })
@@ -700,7 +760,7 @@ lvim.builtin.treesitter.rainbow.enable = true
 
 --NOTE: color por defecto
 -- Configuración para cargar el tema por defecto
-vim.cmd("colorscheme catppuccin")
+-- vim.cmd("colorscheme catppuccin")
 
 -- -- folder icons personalizados
 -- require('nvim-material-icon').setup {
@@ -722,3 +782,18 @@ vim.cmd("colorscheme catppuccin")
 --   color_icons = true,
 --   default = true,
 -- }
+--
+vim.api.nvim_create_autocmd("BufReadPost", {
+  pattern = "*.tsx",
+  callback = function()
+    local ok, gs = pcall(require, "gitsigns")
+    if ok and not vim.b.gitsigns_attached then
+      gs.attach()
+    end
+  end,
+})
+
+
+lvim.keys.normal_mode["<leader>tt"] = function()
+  vim.diagnostic.open_float({ border = "rounded", scope = "line" })
+end
