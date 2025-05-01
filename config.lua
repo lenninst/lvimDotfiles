@@ -6,12 +6,13 @@ reload("lenn.utils.templates")
 reload("lenn.customTheme.lualine")
 reload("lenn.core.which-keys")
 reload("lenn.react")
--- reload("lenn.core.snippets")
+reload("lenn.mariadb")
 
-vim.opt.termguicolors = true
-lvim.colorscheme = "catppuccin"
+
+-- vim.opt.termguicolors = true
+lvim.colorscheme = "catppuccin-macchiato"
 lvim.transparent_window = true
-lvim.format_on_save = true
+-- lvim.format_on_save = true
 vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
 
 vim.g.lvim_dap_enable = true
@@ -76,6 +77,15 @@ vim.g.clipboard = {
 
 --NOTE: CUSTOM PLUGINS -----------------------------------------------------------------
 lvim.plugins = {
+
+  -- imagen
+  {
+    'skardyy/neo-img',
+    build = ":NeoImg Install",
+    config = function()
+      require('neo-img').setup()
+    end
+  },
   { "nvimtools/none-ls.nvim" },
 
   -- -- dap
@@ -193,7 +203,6 @@ lvim.plugins = {
     config = true
   },
   { "tpope/vim-fugitive" },
-
   -- neorg
   {
     "vhyrro/luarocks.nvim",
@@ -532,56 +541,6 @@ lvim.plugins = {
       -- Uncomment next line if you want to follow only stable versions
       version = "*"
     },
-    -- rainbow parentheses
-    {
-      "p00f/nvim-ts-rainbow",
-      branch = "master",
-      config = function()
-        require('nvim-treesitter.configs').setup {
-          rainbow = {
-            enable = true,
-            extended_mode = true, -- También resaltar otros tipos de delimitadores como html tags
-            max_file_lines = nil, -- No limit
-            colors = {
-              "#f2d5cf",
-              "#179299",
-              "#8aadf4",
-              "#ca9ee6",
-              "#91d7e3",
-              "#eebebe",
-              "#ca9ee6",
-            }
-          }
-        }
-      end
-    },
-    -- ventana quicfix
-    -- {
-    --   "kevinhwang91/nvim-bqf",
-    --   event = { "BufRead", "BufNew" },
-    --   config = function()
-    --     require("bqf").setup({
-    --       auto_enable = true,
-    --       preview = {
-    --         win_height = 12,
-    --         win_vheight = 12,
-    --         delay_syntax = 80,
-    --         border_chars = { "┃", "┃", "━", "━", "┏", "┓", "┗", "┛", "█" },
-    --       },
-    --       func_map = {
-    --         vsplit = "",
-    --         ptogglemode = "z,",
-    --         stoggleup = "",
-    --       },
-    --       filter = {
-    --         fzf = {
-    --           action_for = { ["ctrl-s"] = "split" },
-    --           extra_opts = { "--bind", "ctrl-o:toggle-all", "--prompt", "> " },
-    --         },
-    --       },
-    --     })
-    --   end,
-    -- },
     -- mini  plugin complements
     {
       'echasnovski/mini.nvim',
@@ -754,35 +713,7 @@ lvim.lsp.on_attach_callback = function(client, bufnr)
   -- …
 end
 
--- rainbow config
--- lvim.builtin.treesitter.rainbow.enable = true
-lvim.builtin.treesitter.rainbow.enable = true
 
---NOTE: color por defecto
--- Configuración para cargar el tema por defecto
--- vim.cmd("colorscheme catppuccin")
-
--- -- folder icons personalizados
--- require('nvim-material-icon').setup {
---   override = {
---     src = {
---       icon = "󰴉", -- Icono para carpetas src
---       color = "#a6d189",
---       cterm_color = "185",
---       name = "Src"
---     },
---     interfaces = {
---       icon = "",
---       color = "#007acc",
---       cterm_color = "32",
---       name = "Interfaces"
---     },
---     -- Agrega más configuraciones según sea necesario
---   },
---   color_icons = true,
---   default = true,
--- }
---
 vim.api.nvim_create_autocmd("BufReadPost", {
   pattern = "*.tsx",
   callback = function()
@@ -797,3 +728,20 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 lvim.keys.normal_mode["<leader>tt"] = function()
   vim.diagnostic.open_float({ border = "rounded", scope = "line" })
 end
+
+lvim.lsp.installer.automatic_installation = true
+
+
+vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
+
+
+vim.diagnostic.config({
+  signs = true,
+  underline = true,
+  virtual_text = {
+    prefix = " ", -- opcional: ícono en texto virtual también
+  },
+})

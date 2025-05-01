@@ -1,4 +1,9 @@
 -- NOTE: java formater
+
+vim.list_extend(lvim.lsp.automatic_configuration.skipped_servers, { "jdtls" })
+local lsp_manager = require("lvim.lsp.manager")
+lsp_manager.setup("jdtls")
+
 formatters = require "lvim.lsp.null-ls.formatters"
 formatters.setup {
   {
