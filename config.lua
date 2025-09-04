@@ -7,15 +7,20 @@ reload("lenn.customTheme.lualine")
 reload("lenn.core.which-keys")
 reload("lenn.react")
 reload("lenn.mariadb")
+-- reload("lenn.flutter")
 
 
 -- vim.opt.termguicolors = true
-lvim.colorscheme = "catppuccin-macchiato"
-lvim.transparent_window = true
--- lvim.format_on_save = true
+lvim.colorscheme = "catppuccin-mocha"
+-- lvim.transparent_window = true
+
+
+lvim.format_on_save.enabled = true
+lvim.format_on_save.pattern = { "*.tsx", "html", "*.js", "*.ts", "*.jsx", "*.css", "*.scss", "*.json", "*.java", "*.lua" }
+
 vim.opt.shiftwidth = 2 -- the number of spaces inserted for each indentation
 
-vim.g.lvim_dap_enable = true
+-- vim.g.lvim_dap_enable = true
 
 
 vim.opt.sidescrolloff = 8
@@ -77,6 +82,138 @@ vim.g.clipboard = {
 
 --NOTE: CUSTOM PLUGINS -----------------------------------------------------------------
 lvim.plugins = {
+  -- flutter
+  {
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = true,
+  },
+  --posting
+  {
+    "james-t-larson/posting.nvim",
+    config = function()
+      require("posting").setup({
+        keybinds = {
+          {
+            binding = "<leader>op",
+            command = ":OpenPosting --collection posting-collection --env posting-envs/staging.env<CR>",
+            desc = "Open Posting with dev env",
+          },
+        },
+        ui = {
+          border = "rounded", -- Border style for the Posting window
+          width = 0.95,       -- Width of the window relative to the editor
+          height = 0.87,      -- Height of the window relative to the editor
+          x = 0.5,            -- Horizontal center
+          y = 0.5,            -- Vertical center
+        },
+      })
+    end,
+  },
+  --lazygit
+  {
+    "kdheepak/lazygit.nvim",
+    lazy = true,
+    keybinds = {
+      binding = "<leader>ol",
+      command = ":LazyGit<CR>",
+      desc = "Open LazyGit",
+    },
+    cmd = {
+      "LazyGit",
+      "LazyGitConfig",
+      "LazyGitCurrentFile",
+      "LazyGitFilter",
+      "LazyGitFilterCurrentFile",
+    },
+    -- optional for floating window border decoration
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+    },
+    -- setting the keybinding for LazyGit with 'keys' is recommended in
+    -- order to load the plugin when the command is run for the first time
+    keys = {
+      { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" }
+    }
+  },
+  -- brakets pair colored
+  {
+    'HiPhish/rainbow-delimiters.nvim',
+    lazy = true,
+    config = function()
+      vim.g.rainbow_delimiters = {
+        strategy = {
+          [''] = 'rainbow-delimiters.strategy.global',
+          vim = 'rainbow-delimiters.strategy.local',
+        },
+        query = {
+          [''] = 'rainbow-delimiters',
+          lua = 'rainbow-blocks',
+        },
+        priority = {
+          [''] = 110,
+          lua = 210,
+        },
+        highlight = {
+          'RainbowDelimiterRed',
+          'RainbowDelimiterYellow',
+          'RainbowDelimiterBlue',
+          'RainbowDelimiterOrange',
+          'RainbowDelimiterGreen',
+          'RainbowDelimiterViolet',
+          'RainbowDelimiterCyan',
+        },
+      }
+    end,
+  },
+
+  -- html css
+
+  {
+    "Jezda1337/nvim-html-css",
+    dependencies = { "hrsh7th/nvim-cmp", "nvim-treesitter/nvim-treesitter" }, -- Use this if you're using nvim-cmp
+    -- dependencies = { "saghen/blink.cmp", "nvim-treesitter/nvim-treesitter" }, -- Use this if you're using blink.cmp
+    opts = {
+      enable_on = { -- Example file types
+        "html",
+        "htmldjango",
+        "tsx",
+        "jsx",
+        "erb",
+        "svelte",
+        "vue",
+        "blade",
+        "php",
+        "templ",
+        "astro",
+      },
+      handlers = {
+        definition = {
+          bind = "gd"
+        },
+        hover = {
+          bind = "K",
+          wrap = true,
+          border = "none",
+          position = "cursor",
+        },
+      },
+      documentation = {
+        auto_show = true,
+      },
+    },
+  },
+  -- autoregractos para archivos, mover directorios.
+  {
+    "stevearc/oil.nvim",
+    config = function()
+      require("oil").setup()
+    end,
+  },
 
   -- imagen
   {
@@ -164,8 +301,34 @@ lvim.plugins = {
   {
     "luckasRanarison/tailwind-tools.nvim",
     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    opts = {}
+    opts = {
+      document_color = {
+        enabled = false,
+      }
+    }
   },
+
+  {
+    'laytan/tailwind-sorter.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-lua/plenary.nvim' },
+    build = 'cd formatter && npm ci && npm run build',
+    config = function()
+      require('tailwind-sorter').setup({
+        on_save_enabled = true,                                                                                                         -- Activar el ordenamiento al guardar por defecto
+        on_save_pattern = { '*.html', '*.js', '*.jsx', '*.tsx', '*.twig', '*.hbs', '*.php', '*.heex', '*.astro', '*.vue', '*.svelte' }, -- Patrones de archivos donde se activará
+      })
+    end,
+  },
+  {
+    "roobert/tailwindcss-colorizer-cmp.nvim",
+    -- optionally, override the default options:
+    config = function()
+      require("tailwindcss-colorizer-cmp").setup({
+        color_square_width = 2,
+      })
+    end
+  },
+  -- colores
   {
     'VidocqH/lsp-lens.nvim'
   },
@@ -204,28 +367,61 @@ lvim.plugins = {
   },
   { "tpope/vim-fugitive" },
   -- neorg
-  {
-    "vhyrro/luarocks.nvim",
-    priority = 999, -- Queremos que este plugin cargue primero
-    config = true,  -- Esto ejecuta automáticamente `require("luarocks-nvim").setup()`
-  },
+  -- {
+  --   "vhyrro/luarocks.nvim",
+  --   priority = 999, -- Queremos que este plugin cargue primero
+  --   config = true,  -- Esto ejecuta automáticamente `require("luarocks-nvim").setup()`
+  -- },
+
+  -- {
+  --   "nvim-neorg/neorg",
+  --   version = "*",                 -- Usa v9.x
+  --   dependencies = {
+  --     "vhyrro/luarocks.nvim",      -- aún requerido
+  --     "nvim-neorg/lua-utils.nvim", -- nuevo requerido
+  --     "pysan3/pathlib.nvim",       -- nuevo requerido
+  --     "nvim-neotest/nvim-nio",     -- nuevo requerido
+  --   },
+  --   config = function()
+  --     require("neorg").setup {
+  --       load = {
+  --         ["core.defaults"] = {},
+  --         ["core.concealer"] = {},
+  --         ["core.dirman"] = {
+  --           config = {
+  --             workspaces = {
+  --               notes = "~/notes",
+  --             },
+  --           },
+  --         },
+  --       },
+  --     }
+  --   end,
+  -- },
+
   {
     "nvim-neorg/neorg",
-    dependencies = { "vhyrro/luarocks.nvim" },
-    -- version = "*",
-    version = "v7.0.0",
+    version = "*",
+    dependencies = {
+      "MunifTanjim/nui.nvim", -- Asegúrate de incluir esta dependencia
+      "vhyrro/luarocks.nvim",
+      "nvim-neorg/lua-utils.nvim",
+      "pysan3/pathlib.nvim",
+      "nvim-neotest/nvim-nio",
+    },
     config = function()
       require("neorg").setup {
         load = {
-          ["core.defaults"] = {},  -- Carga comportamiento predeterminado
-          ["core.concealer"] = {}, -- Añade íconos bonitos a tus documentos
-          ["core.dirman"] = {      -- Gestiona espacios de trabajo de Neorg
+          ["core.defaults"] = {},
+          ["core.concealer"] = {},
+          ["core.dirman"] = {
             config = {
               workspaces = {
                 notes = "~/notes",
               },
             },
           },
+          ["core.ui.calendar"] = {}
         },
       }
     end,
@@ -293,26 +489,26 @@ lvim.plugins = {
   --ccpmm
   -- {
   --   "zbirenbaum/copilot-cmp",
-  --   dependencies = { "zbirenbaum/copilot.lua" }, -- Dependencia de copilot.lua
+  --   dependencies = { "zbirenbaum/copilot.lua" },
   --   config = function()
-  --     require("copilot_cmp").setup()             -- Configura la integración con nvim-cmp
+  --     require("copilot_cmp").setup()
   --   end,
   -- },
 
   -- Copilot Chat Configuration
   {
     "CopilotC-Nvim/CopilotChat.nvim",
-    cmd = { "CopilotChat", "CopilotChatOpen" }, -- Comandos para abrir el chat de Copilot
-    build = "make tiktoken",                    -- Comando de construcción
+    cmd = { "CopilotChat", "CopilotChatOpen" },
+    build = "make tiktoken",
     dependencies = {
-      { "nvim-lua/plenary.nvim" },              -- Dependencia para funciones Lua comunes
-      { "github/copilot.vim" },                 -- Dependencia de Copilot para Vim
+      { "nvim-lua/plenary.nvim" },
+      { "github/copilot.vim" },
     },
     opts = {
       debug = false,
       window = {
-        layout = "float",   -- Layout flotante para el chat
-        border = "rounded", -- Borde redondeado para la ventana
+        layout = "vertical",
+        border = "rounded",
       },
     },
   },
@@ -535,12 +731,47 @@ lvim.plugins = {
       end,
     },
     -- auto documentation
+
     {
       "danymat/neogen",
-      config = true,
-      -- Uncomment next line if you want to follow only stable versions
-      version = "*"
+      version = "*",
+      dependencies = "nvim-treesitter/nvim-treesitter",
+      config = function()
+        require("neogen").setup({
+          enabled = true,
+          input_after_comment = true,
+          jump_map = "<C-j>",
+          languages = {
+            typescript = {
+              template = {
+                annotation_convention = "tsdoc"
+              }
+            },
+            typescriptreact = {
+              template = {
+                annotation_convention = "tsdoc"
+              }
+            },
+            javascript = {
+              template = {
+                annotation_convention = "tsdoc"
+              }
+            },
+            javascriptreact = {
+              template = {
+                annotation_convention = "tsdoc"
+              }
+            },
+            java = {
+              template = {
+                annotation_convention = "javadoc"
+              }
+            }
+          }
+        })
+      end,
     },
+
     -- mini  plugin complements
     {
       'echasnovski/mini.nvim',
@@ -616,16 +847,7 @@ lvim.plugins = {
       opts = {
       }
     },
-    -- create folder advance
-    {
-      'stevearc/oil.nvim',
-      ---@module 'oil'
-      ---@type oil.SetupOpts
-      opts = {},
-      -- Optional dependencies
-      dependencies = { { "echasnovski/mini.icons", opts = {} } },
-      -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
-    },
+
     -- for winddows
     -- {
     --   "lervag/vimtex",
@@ -745,3 +967,40 @@ vim.diagnostic.config({
     prefix = " ", -- opcional: ícono en texto virtual también
   },
 })
+
+
+lvim.builtin.cmp.formatting = {
+  format = require("tailwindcss-colorizer-cmp").formatter
+}
+
+
+-- vim.api.nvim_create_user_command("EnableRainbow", function()
+--   require("lazy").load({ plugins = { "rainbow-delimiters.nvim" } })
+--   vim.diagnostic.reset() -- opcional: refresca vista
+-- end, {})
+
+-- activar y desactivar rainbow delimiters
+vim.api.nvim_create_user_command("EnableRainbow", function()
+  require("lazy").load({ plugins = { "rainbow-delimiters.nvim" } })
+  vim.defer_fn(function()
+    vim.api.nvim_exec_autocmds("FileType", { buffer = 0 })
+  end, 100)
+end, {})
+
+vim.api.nvim_create_user_command("DisableRainbow", function()
+  -- Elimina los highlights aplicados
+  vim.cmd([[
+    highlight clear RainbowDelimiterRed
+    highlight clear RainbowDelimiterYellow
+    highlight clear RainbowDelimiterBlue
+    highlight clear RainbowDelimiterOrange
+    highlight clear RainbowDelimiterGreen
+    highlight clear RainbowDelimiterViolet
+    highlight clear RainbowDelimiterCyan
+  ]])
+
+  -- Fuerza redibujado
+  vim.cmd("redraw")
+end, {})
+
+-- neorg kanban

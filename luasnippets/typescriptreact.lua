@@ -1,7 +1,5 @@
 return {
   s("div", { t("<div>"), i(1), t("</div>") }),
-
-
   s("span", { t("<span>"), i(1), t("</span>") }),
   s("p", { t("<p>"), i(1), t("</p>") }),
   s("h1", { t("<h1>"), i(1), t("</h1>") }),
@@ -37,11 +35,11 @@ return {
 
 
   s("nximg", {
-    t('<Image src="'), i(1, "/path.jpg"), t('" alt="'), i(2, "img"), t('" width={'), i(3, "500"), t('} height={'), i(4,
-    "300"), t('} />')
+    t('<Image src="'), i(1, "/path.jpg"), t('" alt="'), i(2, "img"), t('" width={'), i(3, "20"), t('} height={'), i(4,
+    "20"), t('} />')
   }),
   s("nxlink", {
-    t('<Link href="'), i(1, "/route"), t('"><a>'), i(2, "text"), t('</a></Link>')
+    t('<Link href="'), i(1, "/route"), t('">'), i(2, "text"), t('</Link>')
   }),
   s("nxhead", {
     t('<Head>'), i(1), t('</Head>')

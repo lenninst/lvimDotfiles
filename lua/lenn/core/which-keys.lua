@@ -97,6 +97,28 @@ lvim.builtin.which_key.mappings["o"] = {
   t = { ":lua InsertTodo('TEST')<CR>", "󰙨 TEST: Para pruebas y verificaciones" },
 }
 
+-- Configuración de which_key para Neogen
+lvim.builtin.which_key.mappings["d"] = {
+  name = " 󰈙 NeogenDocs",
+  g = { "<cmd>Neogen<CR>", "Generate Doc" },
+  f = { "<cmd>Neogen func<CR>", "Function Doc" },
+  c = { "<cmd>Neogen class<CR>", "Class Doc" },
+  t = { "<cmd>Neogen type<CR>", "Type Doc" },
+  i = { "<cmd>Neogen file<CR>", "File Doc" },
+  m = { "<cmd>Neogen file --type=tsdoc<CR>", "TSDoc File" },
+  j = { "<cmd>Neogen file --type=jsdoc<CR>", "JSDoc File" },
+  p = { "<cmd>Neogen func --type=tsdoc<CR>", "TSDoc Function" },
+  r = { "<cmd>Neogen func --type=jsdoc<CR>", "JSDoc Function" },
+}
+-- Auto Format group
+
+
+-- Agregarlo a which_key con acceso desde <leader>F t
+lvim.builtin.which_key.mappings["F"] = {
+  name = "  Auto-Format",
+  t = { "<cmd>ToggleFormatOnSave<CR>", "Alternar Format on Save" },
+}
+
 
 function InsertTodo(keyword)
   local line = vim.api.nvim_get_current_line()
@@ -122,10 +144,6 @@ function InsertTodo(keyword)
 
   -- Mueve el cursor dentro del bloque de comentario y entra en modo insert
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
-  vim.api.nvim_win_set_cursor(0, {row, #new_line - 3}) -- Posiciona antes de `*/`
+  vim.api.nvim_win_set_cursor(0, { row, #new_line - 3 }) -- Posiciona antes de `*/`
   vim.cmd("startinsert")
 end
-
-
-
-

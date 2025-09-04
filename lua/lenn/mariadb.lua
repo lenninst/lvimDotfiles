@@ -1,5 +1,3 @@
-print("hola desde mariadb")
-
 local lspconfig = require('lspconfig')
 
 lspconfig.sqls.setup({

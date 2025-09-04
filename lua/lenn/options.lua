@@ -41,7 +41,7 @@ require("nvim-highlight-colors").setup {
   virtual_symbol = '',
 
   ---Set virtual symbol suffix (defaults to '')
-  virtual_symbol_prefix = ' ',
+  virtual_symbol_prefix = ' ',
 
   ---Set virtual symbol suffix (defaults to ' ')
   virtual_symbol_suffix = '',
