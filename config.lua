@@ -403,7 +403,7 @@ lvim.plugins = {
     "nvim-neorg/neorg",
     version = "*",
     dependencies = {
-      "MunifTanjim/nui.nvim", -- Asegúrate de incluir esta dependencia
+      "MunifTanjim/nui.nvim",
       "vhyrro/luarocks.nvim",
       "nvim-neorg/lua-utils.nvim",
       "pysan3/pathlib.nvim",
@@ -954,17 +954,17 @@ end
 lvim.lsp.installer.automatic_installation = true
 
 
-vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "󰌵", texthl = "DiagnosticSignHint" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
+vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
+vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
 
 
 vim.diagnostic.config({
   signs = true,
   underline = true,
   virtual_text = {
-    prefix = " ", -- opcional: ícono en texto virtual también
+    prefix = " ", -- opcional: ícono en texto virtual también
   },
 })
 
