@@ -1,6 +1,6 @@
 # Dotfiles for Lunarvim config.
 
-Este repositorio contiene un archivo de configuración para LVIM, mi editor de código preferido. Aunque admito que la estructura puede parecer un poco desordenada, te aseguro que funciona de manera efectiva.
+Este repositorio contiene un archivo de configuración para LVIM, mi editor de código preferido. Aunque admito que la estructura puede parecer un poco desordenada, paso mucho tiempo usando esta condiguracion pero sincecramente tengo muchos problemas con varias cosas, asi que he decidio crear una version de lvm con todas las cosas que uso realmente, una configuracion desde cero .. :(
 
 ## Contenido del Repositorio
 
